@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Radha Mala Counter</title>
+
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      font-family: "Poppins", sans-serif;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                  url("mybackground.jpg") center/cover no-repeat fixed;
+      background-color: #000;
+      position: relative;
+    }
+
+    header {
+      position: fixed;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+    }
+
+    header h1 {
+      color: #ffd700;
+      font-size: 1.8rem;
+      margin: 0;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    }
+
+    #datetime {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 0.85rem;
+      color: #ffd700;
+      text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+      z-index: 10;
+    }
+
+    /* 🕉 Centered counter with circle */
+    .counter-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 20;
+      width: 100%;
+    }
+
+    .circle-wrapper {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto;
+    }
+
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    circle {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+    }
+
+    .circle-bg {
+      stroke: rgba(255, 255, 255, 0.2);
+    }
+
+    .circle-progress {
+      stroke: #00FFAA;
+      stroke-dasharray: 628;
+      stroke-dashoffset: 628;
+      transition: stroke-dashoffset 0.3s ease;
+      filter: drop-shadow(0 0 8px rgba(0,255,170,0.7));
+    }
+
+    #counter {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      color: #00FFAA;
+      text-shadow: 0 0 20px rgba(0,255,170,0.8);
+      z-index: 2;
+      line-height: 1;
+    }
+
+    p {
+      color: #fff;
+      font-size: 1.4rem;
+      opacity: 0.9;
+      margin-top: 280px;
+    }
+
+    .boxes {
+      position: fixed;
+      bottom: 280px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 15;
+    }
+
+    .box {
+      width: 130px;
+      height: 90px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid #00FFAA;
+      border-radius: 15px;
+      text-align: center;
+      padding-top: 10px;
+      box-shadow: 0 0 15px rgba(0,255,170,0.3);
+      backdrop-filter: blur(6px);
+    }
+
+    .box h3 {
+      margin: 5px 0;
+      color: #ffd700;
+      font-size: 1rem;
+    }
+
+    .box span {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00FFAA;
+    }
+
+    #reset {
+      position: fixed;
+      bottom: 125px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #00FFAA;
+      border: none;
+      color: #000;
+      padding: 10px 25px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 600;
+      z-index: 20;
+    }
+
+    #reset:hover { background-color: #00cc88; }
+
+    .creator {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.85rem;
+      color: #ffd700;
+      text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+    }
+
+    /* 🌸 Floating Radha animation (mobile visible) */
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(1.3);
+      }
+    }
+
+    .floatingName {
+      position: fixed;
+      font-size: 2rem;
+      color: #FFD700;
+      font-weight: bold;
+      pointer-events: none;
+      animation: floatUp 0.8s ease-out forwards;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+      font-family: "Poppins", sans-serif;
+      z-index: 9999;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.2rem; }
+      .circle-wrapper { width: 180px; height: 180px; }
+      #counter { font-size: 3rem; }
+      p { margin-top: 230px; font-size: 0.9rem; }
+      .box { width: 110px; height: 75px; }
+      .box span { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <header><h1>🌸Radha Mala Counter🌸</h1></header>
+  <div id="datetime"></div>
+
+  <div class="counter-container">
+    <div class="circle-wrapper">
+      <svg viewBox="0 0 220 220">
+        <circle class="circle-bg" cx="110" cy="110" r="100"></circle>
+        <circle class="circle-progress" cx="110" cy="110" r="100"></circle>
+      </svg>
+      <div id="counter">0</div>
+    </div>
+    <p>Tap anywhere to chant</p>
+  </div>
+
+  <div class="boxes">
+    <div class="box">
+      <h3>Mala</h3>
+      <span id="malaCount">0</span>
+    </div>
+    <div class="box">
+      <h3>Total Count</h3>
+      <span id="totalCount">0</span>
+    </div>
+  </div>
+
+  <button id="reset">Reset</button>
+  <div class="creator">Created by Abhishek Chauhan</div>
+
+  <script>
+    let count = 0, mala = 0;
+    const counter = document.getElementById("counter");
+    const malaCount = document.getElementById("malaCount");
+    const totalCount = document.getElementById("totalCount");
+    const circle = document.querySelector(".circle-progress");
+    const circumference = 2 * Math.PI * 100;
+    let touchActive = false;
+
+    function updateCircle() {
+      const progress = (count % 108) / 108;
+      const offset = circumference - progress * circumference;
+      circle.style.strokeDashoffset = offset;
+    }
+
+    function chant() {
+      count++;
+      counter.textContent = count % 108;
+      totalCount.textContent = count;
+      updateCircle();
+      if (count % 108 === 0) {
+        mala++;
+        malaCount.textContent = mala;
+      }
+    }
+
+    function showFloatingName(x, y) {
+      const el = document.createElement("div");
+      el.textContent = "Radha";
+      el.classList.add("floatingName");
+      el.style.left = `${x - 25}px`;
+      el.style.top = `${y - 35}px`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+
+    // ✅ Touch (mobile)
+    document.addEventListener("touchstart", e => {
+      if (!touchActive) {
+        touchActive = true;
+        const touch = e.touches[0];
+        showFloatingName(touch.clientX, touch.clientY);
+        chant();
+      }
+    });
+    document.addEventListener("touchend", () => { touchActive = false; });
+
+    // ✅ Desktop click
+    document.addEventListener("mousedown", e => {
+      if (window.innerWidth > 700 && e.button === 0) {
+        showFloatingName(e.clientX, e.clientY);
+        chant();
+      }
+    });
+
+    // ✅ Reset button
+    document.getElementById("reset").addEventListener("click", e => {
+      e.stopPropagation();
+      count = mala = 0;
+      counter.textContent = 0;
+      totalCount.textContent = 0;
+      malaCount.textContent = 0;
+      updateCircle();
+    });
+
+    // ✅ Date & Time
+    setInterval(() => {
+      const d = new Date();
+      document.getElementById("datetime").textContent =
+        d.toLocaleDateString() + " | " +
+        d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    }, 1000);
+
+    circle.style.strokeDasharray = circumference;
+    circle.style.strokeDashoffset = circumference;
+  </script>
+</body>
+</html>
